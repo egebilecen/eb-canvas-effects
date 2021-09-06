@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Canvas Effects Example</title>
+</head>
+<body>
+    <h2>Rain Effect</h2>
+    <canvas id="canvas" width="500" height="500" style="border:1px solid #aaa;display:block;margin-bottom:10px;"></canvas>
+    
+    <h2>Pixel Particule Effect (Click on canvas)</h2>
+    <canvas id="canvas2" width="500" height="500" style="border:1px solid #aaa;display:block;margin-bottom:5px;"></canvas>
+
+    <span id="bounce-setting">Bounce: <a href="#" id="bounce-status" onclick="return false;"></a></span>
+
+    <script src="js/eb_canvas_particule.js"></script>
+    <script src="js/eb_canvas_rain.js"></script>
+
+    <script>
+        // Rain
+        var rain = new EB_RAIN(document.getElementById('canvas'));
+        rain.settings.autoClearCanvas = true;
+        rain.settings.rainDrop.count  = 20;
+        rain.start();
+
+        // Particule
+        var particule = new EB_Particule( document.getElementById('canvas2'), 1, 0, 60 );
+        particule.settings.autoClearCanvas = true;
+        // particule.settings.particule.maxDuration = 100;
+
+        document.getElementById('canvas2').addEventListener("click", function(e){
+            console.log(e);
+            particule.createParticule(10, e.layerX, e.layerY);
+        });
+
+        var particule_drawer = setInterval( () => {
+            particule.update();
+        }, 1000/particule.settings.fps );
+
+        var __bounce_status = document.getElementById('bounce-status');
+		var __text = ( particule.settings.bounce === 0 ) ? 'off':'on';
+		__bounce_status.innerHTML=__text;
+		
+		__bounce_status.addEventListener('click',function(){
+			var __status = particule.settings.bounce;
+			__status === 0 ? __status++ : __status--;
+			
+			particule.settings.bounce = __status;
+			
+			var __text = ( particule.settings.bounce === 0 ) ? 'off':'on';
+			__bounce_status.innerHTML=__text;
+		});
+    </script>
+</body>
+</html>
